@@ -1,6 +1,6 @@
 ## KAPOAI2020
 #### by Junha
-#### lger : learning rate, decay_gamma, exp_rate, rounds
+lger : learning rate, decay_gamma, exp_rate, rounds
 
 ### RL
 Reinforcement Learning
