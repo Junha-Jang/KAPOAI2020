@@ -13,26 +13,26 @@ def getHash(A, position, player):
     AA = deepcopy(A)
     p = position.copy()
     
-    if p[2]-p[0]<0:
+    if p[2] - p[0] < 0:
         for i in range(3):
             for j in range(3):
-                AA[i][j],AA[6-i][j] = AA[6-i][j],AA[i][j]
-        p[0]=6-p[0]
-        p[2]=6-p[2]
+                AA[i][j], AA[6-i][j] = AA[6-i][j], AA[i][j]
+        p[0] = 6 - p[0]
+        p[2] = 6 - p[2]
 
-    if p[3]-p[1]<0:
+    if p[3] - p[1] < 0:
         for i in range(7):
             for j in range(7):
-                AA[i][j],AA[i][6-j] = AA[i][6-j],AA[i][j]
-        p[1]=6-p[1]
-        p[3]=6-p[3]
+                AA[i][j], AA[i][6-j] = AA[i][6-j], AA[i][j]
+        p[1] = 6 - p[1]
+        p[3] = 6 - p[3]
 
-    if p[2]-p[0]<p[3]-p[1]:
+    if p[2] - p[0] < p[3] - p[1]:
         for i in range(7):
             for j in range(i+1,7):
-                AA[i][j],AA[j][i] = AA[j][i],AA[i][j]
-        p[0],p[1] = p[1],p[0]
-        p[2],p[3] = p[3],p[2]
+                AA[i][j], AA[j][i] = AA[j][i], AA[i][j]
+        p[0], p[1] = p[1], p[0]
+        p[2], p[3] = p[3], p[2]
         
     s1 = s2 = s3 = 0
     e2 = e3 = 0
@@ -42,46 +42,46 @@ def getHash(A, position, player):
         for dy in range(-3,4):
             if not dx and not dy:
                 continue
-            if p[0]+dx<0 or p[0]+dx>=BOARD_ROWS or p[1]+dy<0 or p[1]+dy>=BOARD_COLS:
+            if p[0] + dx < 0 or p[0] + dx >= BOARD_ROWS or p[1] + dy < 0 or p[1] + dy >= BOARD_COLS:
                 continue
 
-            if AA[p[0]+dx][p[1]+dy]!=3-player:
+            if AA[p[0] + dx][p[1] + dy] != 3 - player:
                 continue
-            if max(abs(dx),abs(dy))==1:
-                s1=1
-            if max(abs(dx),abs(dy))==2:
-                s2=1
-            if max(abs(dx),abs(dy))==3:
-                s3=1
+            if max(abs(dx), abs(dy)) == 1:
+                s1 = 1
+            if max(abs(dx), abs(dy)) == 2:
+                s2 = 1
+            if max(abs(dx), abs(dy)) == 3:
+                s3 = 1
 
     for dx in range(-3,4):
         for dy in range(-3,4):
-            if abs(dx)<=1 and abs(dy)<=1:
+            if abs(dx) <= 1 and abs(dy) <= 1:
                 continue
-            if p[2]+dx<0 or p[2]+dx>=BOARD_ROWS or p[3]+dy<0 or p[3]+dy>=BOARD_COLS:
+            if p[2] + dx < 0 or p[2] + dx >= BOARD_ROWS or p[3] + dy < 0 or p[3] + dy >= BOARD_COLS:
                 continue
 
-            if AA[p[2]+dx][p[3]+dy]!=3-player:
+            if AA[p[2] + dx][p[3] + dy] != 3 - player:
                 continue
-            if max(abs(dx),abs(dy))==2:
-                e2=1
-            if max(abs(dx),abs(dy))==3:
-                e3=1
+            if max(abs(dx), abs(dy)) == 2:
+                e2 = 1
+            if max(abs(dx), abs(dy)) == 3:
+                e3 = 1
 
     for dx in range(-1,2):
         for dy in range(-1,2):
             if not dx and not dy:
                 continue
 
-            shape = shape<<1
-            if p[2]+dx<0 or p[2]+dx>=BOARD_ROWS or p[3]+dy<0 or p[3]+dy>=BOARD_COLS:
-                shape = shape|1
-            elif AA[p[2]+dx][p[3]+dy]:
-                shape = shape|1
+            shape = shape << 1
+            if p[2] + dx < 0 or p[2] + dx >= BOARD_ROWS or p[3] + dy < 0 or p[3] + dy >= BOARD_COLS:
+                shape = shape | 1
+            elif AA[p[2] + dx][p[3] + dy]:
+                shape = shape | 1
 
-    if(p[3]-p[1]<2):
-        return ((p[3]-p[1])<<12)+((s1|s2)<<11)+(s3<<10)+(e2<<9)+(e3<<8)+shape+1
-    return ((p[3]-p[1])<<12)+(s1<<11)+(s2<<10)+(e2<<9)+(e3<<8)+shape+1
+    if(p[3] - p[1] < 2):
+        return ((p[3] - p[1]) << 12) + ((s1 | s2) << 11) + (s3 << 10) + (e2 << 9) + (e3 << 8) + shape + 1
+    return ((p[3] - p[1]) << 12) + (s1 << 11) + (s2 << 10) + (e2 << 9) + (e3 << 8) + shape + 1
 
 def next_board(A, p, player):
     AA = deepcopy(A)
@@ -284,25 +284,19 @@ def phase23(A, dep, player):
         elif mx1 == mn2:
             mxp1.append(p1)
 
-    # 대충 학습시킨거 써먹는 부분
-    fr = open('policy3_legr_0.2_0.1_0.95_1000_p2','rb')
+    fr = open('policy3_legr_0.2_0.1_0.95_1000_p2', 'rb')
     states_value = pickle.load(fr)
     fr.close()
 
     value_max = -INF
     for p in mxp1:
-        # print("p", p)
         boardHash = getHash(A, p, player)
-        # print("boardHash", boardHash, states_value.get(boardHash))
         value = 0 if states_value.get(boardHash) is None else states_value.get(boardHash)
-        # print("value", value, value_max)
         if value >= value_max:
             value_max = value
             action = p
 
     action.append(mx1)
-    # print("mx1")
-    # print(mx1)
     return action
 
 
@@ -323,20 +317,19 @@ if __name__ == "__main__":
 
     # 입력 예시
     # PLAY
-    # 2 0 0 0 0 0 1
-    # 0 0 0 0 0 0 0
-    # 0 0 0 0 0 0 0
-    # 0 0 0 0 0 0 0
-    # 0 0 0 0 0 0 0
-    # 0 0 0 0 0 0 0
     # 1 0 0 0 0 0 2
+    # 0 0 0 0 0 0 0
+    # 0 0 0 0 0 0 0
+    # 0 0 0 0 0 0 0
+    # 0 0 0 0 0 0 0
+    # 0 0 0 0 0 0 0
+    # 2 0 0 0 0 0 1
     # 1234567890.1234567 (입력시간)
 
     # AI의 액션을 출력하세요.
     # 출력 예시 : "0 0 2 2"
     elif input_str.startswith("PLAY"):
         player = 1 if __file__[-4] == '1' else 2
-        actions = {} # { key: piece(start position), value: list of position(destination position) }
 
         # make board
         input_lines = input_str.split("\n")
