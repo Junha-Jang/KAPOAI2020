@@ -139,7 +139,7 @@ def get_phase(player):
         for y in range(BOARD_COLS):
             if B[x][y] != 0:
                 cnt += 1
-    if cnt >= BOARD_ROWS * BOARD_COLS - 4:
+    if cnt >= BOARD_ROWS * BOARD_COLS - 3:
         return 3
  
     for x1 in range(BOARD_ROWS):
@@ -284,7 +284,7 @@ def phase23(A, dep, player):
         elif mx1 == mn2:
             mxp1.append(p1)
 
-    fr = open('policy3_legr_0.2_0.1_0.95_1000_p2', 'rb')
+    fr = open('degool_degool', 'rb')
     states_value = pickle.load(fr)
     fr.close()
 
